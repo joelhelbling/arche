@@ -1,6 +1,6 @@
 # Arche
 
-TODO: Write a gem description
+A library for Javascript-styled prototypal programming in Ruby.
 
 ## Installation
 
@@ -18,7 +18,24 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create an Arche object:
+
+```ruby
+object = Arche::Type.new({ foo: "FOO" })
+
+object[:bar] = "BAR"
+object.bar #=> "BAR"
+object.foo = "BAZ"
+object[:foo] #=> "BAZ"
+```
+
+## Todo
+
+* Arche objects should have prototypes (of course!)
+* handle scoping of Procs as functions
+* handle accessing of functions as values (vs for execution)
+* implement .to_h
+* add some nifty shorthands (Kernel module?) for low ceremony creating of Arche objects and functions
 
 ## Contributing
 
