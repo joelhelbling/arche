@@ -1,6 +1,6 @@
 module Arche
   class Type
-    def initialize(data)
+    def initialize(data={})
       @data = data
     end
 
@@ -13,11 +13,14 @@ module Arche
     end
 
     def method_missing(method_symbol, *arguments, &block)
-      if @data.keys.include? method_symbol
+      if method_symbol.to_s =~ /\!$/ && @data.keys.include?(method_symbol.to_s.gsub(/\!$/, "").to_sym)
+        function = @data[method_symbol.to_s.gsub(/\!$/, "").to_sym].function
+        instance_eval(&function)
+      elsif @data.keys.include? method_symbol
         self[method_symbol]
       elsif @data.keys.include? method_symbol.to_s
         self[method_symbol.to_s]
-      elsif method_symbol.to_s =~ /=?/
+      elsif method_symbol.to_s =~ /=$/
         self[key_for_setter(method_symbol)] = arguments.first
       else
         super.send method_symbol, *arguments, &block
@@ -25,6 +28,10 @@ module Arche
     end
 
     private
+
+    def this
+      self
+    end
 
     def key_for_setter(method_symbol)
       symbol_key = symbol_key_for_setter(method_symbol)
@@ -34,7 +41,7 @@ module Arche
     end
 
     def symbol_key_for_setter(method_symbol)
-      method_symbol.to_s.gsub(/=?/, "").to_sym
+      method_symbol.to_s.gsub(/=$/, "").to_sym
     end
 
     def only_string_version_exists?(symbol_key)

@@ -2,7 +2,13 @@ require 'arche/type'
 
 module Arche
 
-  describe "Arche::Type" do
+  describe Type do
+    context "default constructor" do
+      it "makes an empty @data hash" do
+        subject.instance_eval("@data").should == {}
+      end
+    end
+
     context "Data members" do
 
       subject { Type.new({ foo: "FOO" }) }
