@@ -1,4 +1,5 @@
 require 'arche/type'
+require 'arche/function'
 
 module Arche
 
@@ -9,25 +10,25 @@ module Arche
       end
     end
 
-    context "Data members" do
+    describe "Data members" do
 
       subject { Type.new({ foo: "FOO" }) }
 
       context "generally" do
-        specify "can be accessed like a hash" do
+        it "can be accessed like a hash" do
           subject[:foo].should == "FOO"
         end
 
-        specify "can be accessed with an accessor" do
+        it "can be accessed with an accessor" do
           subject.foo.should == "FOO"
         end
 
-        specify "can be added like a hash" do
+        it "can be added like a hash" do
           subject[:bar] = "BAR"
           subject.instance_eval("@data").should == { foo: "FOO", bar: "BAR" }
         end
 
-        specify "can be added with an accessor" do
+        it "can be added with an accessor" do
           subject.bar = "BAR"
           subject.instance_eval("@data").should == { foo: "FOO", bar: "BAR" }
         end
@@ -51,14 +52,18 @@ module Arche
       context "Now, the use of an accessor also works if there is an equivelent string" do
         specify "for getters" do
           subject["could_be_symbol_but_actually_a_string"] = "Oh, that's nice"
-          subject.instance_eval("@data").should == { :foo => "FOO", "could_be_symbol_but_actually_a_string" => "Oh, that's nice" }
+          subject.instance_eval("@data").should == {
+            :foo => "FOO",
+            "could_be_symbol_but_actually_a_string" => "Oh, that's nice" }
           subject.could_be_symbol_but_actually_a_string.should == "Oh, that's nice"
         end
 
         specify "and for setters" do
           subject["could_be_symbol_but_actually_a_string"] = "original value"
           subject.could_be_symbol_but_actually_a_string = "new value"
-          subject.instance_eval("@data").should == { :foo => "FOO", "could_be_symbol_but_actually_a_string" => "new value" }
+          subject.instance_eval("@data").should == {
+            :foo => "FOO",
+            "could_be_symbol_but_actually_a_string" => "new value" }
         end
       end
 
@@ -75,7 +80,33 @@ module Arche
         end
       end
 
-    end
+      context "which are also functions" do
+        subject do
+          Type.new({
+            funky: Function.new { 2 + 3 }
+          })
+        end
+        it "can be accessed as a data member" do
+          subject.funky.should be_kind_of(Function)
+        end
+        it "can also be 'invoked' as a callable function" do
+          subject.funky!.should == 5
+        end
+        specify "but invoking a datamember which isn't a function raises an error" do
+          subject.unfunk = "nope"
+          expect{ subject.unfunk! }.to raise_error(TypeError, "object is not a function")
+        end
+        context "and those functions can also accept arguments" do
+          before do
+            subject.greets = Function.new { |name| "Hello, #{name}" }
+          end
+          it "because it's a Proc instead of a Lambda :)" do
+            subject.greets!("Justin").should == "Hello, Justin"
+          end
+        end
+      end
+
+    end # describe Data members
   end
 
 end

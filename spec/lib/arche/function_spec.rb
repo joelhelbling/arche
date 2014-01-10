@@ -1,16 +1,7 @@
 require 'arche/type'
+require 'arche/function'
 
 module Arche
-  class Function < Type
-    attr_reader :function
-
-    def initialize(data={}, &block)
-      super
-      @function = block || Proc.new { nil }
-    end
-
-  end
-
   describe Function do
     it { should be_kind_of Arche::Type }
 

@@ -14,8 +14,13 @@ module Arche
 
     def method_missing(method_symbol, *arguments, &block)
       if method_symbol.to_s =~ /\!$/ && @data.keys.include?(method_symbol.to_s.gsub(/\!$/, "").to_sym)
-        function = @data[method_symbol.to_s.gsub(/\!$/, "").to_sym].function
-        instance_eval(&function)
+        arche_function = @data[method_symbol.to_s.gsub(/\!$/, "").to_sym]
+        if arche_function && arche_function.class == Arche::Function
+          function = arche_function.function
+          instance_exec(*arguments, &function)
+        else
+          raise TypeError.new("object is not a function")
+        end
       elsif @data.keys.include? method_symbol
         self[method_symbol]
       elsif @data.keys.include? method_symbol.to_s
