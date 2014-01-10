@@ -22,19 +22,30 @@ Create an Arche object:
 
 ```ruby
 object = Arche::Type.new({ foo: "FOO" })
+```
 
+And access its data members (the way you can with Javascript):
+
+```ruby
 object[:bar] = "BAR"
 object.bar #=> "BAR"
 object.foo = "BAZ"
 object[:foo] #=> "BAZ"
 ```
 
+And data members which happen to be Arche::Functions can be both 
+accessed and invoked!
+
+```ruby
+object.funky = Arche::Function.new { 4 + 7 }
+object.funky.class #=> Arche::Function
+object.funky! #=> 11
+```
+
 ## Todo
 
 * Arche objects should have prototypes (of course!)
-* handle scoping of Procs as functions
-* handle accessing of functions as values (vs for execution)
-* implement .to_h
+* implement #to_h (and #from_h...?)
 * add some nifty shorthands (Kernel module?) for low ceremony creating of Arche objects and functions
 
 ## Contributing

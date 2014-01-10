@@ -5,7 +5,7 @@ module Arche
     end
 
     def [](key)
-      @data[key]
+      @data[key] # eventually we'll also check for key in the prototype
     end
 
     def []=(key, value)
@@ -25,6 +25,7 @@ module Arche
         self[method_symbol]
       elsif @data.keys.include? method_symbol.to_s
         self[method_symbol.to_s]
+      # and eventually we'll also check for existance of key in the prototype...
       elsif method_symbol.to_s =~ /=$/
         self[key_for_setter(method_symbol)] = arguments.first
       else
