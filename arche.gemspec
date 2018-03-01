@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Joel Helbling"]
   spec.email         = ["joel@joelhelbling.com"]
   spec.description   = %q{Javascript-styled prototypal programming in Ruby.}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.summary       = %q{Javascript-styled prototypal programming in Ruby.}
   spec.homepage      = "http://github.com/joelhelbling/arche"
   spec.license       = "MIT"
 
