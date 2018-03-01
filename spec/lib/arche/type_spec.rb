@@ -104,6 +104,15 @@ module Arche
             subject.greets!("Justin").should == "Hello, Justin"
           end
         end
+        context "and function datamembers can also be strings instead of symbols" do
+          before do
+            subject["greets"] = Function.new { |name| "Hello, #{name}" }
+            subject[:greets] = "woo"
+          end
+          it "works" do
+            subject.greets!("Todd").should == "Hello, Todd"
+          end
+        end
       end
 
     end # describe Data members
